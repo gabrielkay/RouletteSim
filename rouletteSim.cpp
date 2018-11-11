@@ -1,6 +1,7 @@
 #include "Player.h"
 #include <string>
 #include <iostream>
+#include <stdlib.h>
 
 int main(){
     std::string budget, spins, american;
@@ -16,8 +17,10 @@ int main(){
     bool americanBool = std::stoi(american);
     Player gambler(budgetInt, spinsInt, americanBool);
     gambler.startPlaying();
-    std::cout<<"Final balance was: " + gambler.balance <<std::endl;
-    std::cout<<"Total spins not used: " + gambler.spins <<std::endl;
+    std::cout<<"Final balance was: ";
+    std::cout<< gambler.balance <<std::endl;
+    std::cout<<"Total spins not used: ";
+    std::cout<< gambler.spins <<std::endl;
 
 
 

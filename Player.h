@@ -7,7 +7,7 @@
 class Player {
 private:
     int budget;
-    bool noDebt;
+    bool positive;
     bool american;
     double odds;
 public:
@@ -18,7 +18,7 @@ public:
     const double americanOdds = .4737;
     const double europeanOdds = .4865;
     void startPlaying();
-    int spinTheWheel(int bet);
+    int spinTheWheel(int bet, bool &justLost);
     float randmm(float min, float max);
 };
 #endif

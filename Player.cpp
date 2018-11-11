@@ -7,6 +7,9 @@
 #include <stdio.h>
 #include <time.h>
 #include <unistd.h>
+#include <math.h>
+#include <errno.h>
+
 
 Player::Player(){
     budget = 1000;
@@ -31,15 +34,26 @@ Player::Player(int budg, int spin, bool amer){
     }
 }
 
-Player::startPlaying(){
-    srand (time ( NULL));
+void Player::startPlaying(){
     int bet = 1;
+    bool justLost = false;
     while (spins > 0 && positive){
-        int bet = spinTheWheel(bet);
+        bet = spinTheWheel(bet, justLost);
     }
 }
 
-int Player::spinTheWheel(int bet){
+float Player::randmm(float min, float max){
+     static int first = -1;
+     if((first = (first<0))){
+         srand(time(NULL)+getpid());
+     }
+     if(min>=max){
+         return errno=EDOM, NAN;
+     }
+     return min + (float)rand() / ((float)RAND_MAX / (max - min));
+}
+
+int Player::spinTheWheel(int bet, bool &justLost){
     spins--;
     float spinResult = randmm(0, 1);
     if (spinResult <= .4737){
@@ -49,25 +63,14 @@ int Player::spinTheWheel(int bet){
     else {
         balance -= bet;
         if (balance <= 0){
-            noDebt = false;
-            if (bet == 1){
-                return 1;
-            }
-            else {
-                return bet * 2;
-            }
+            positive = false;
+        }
+        if (justLost == false){
+            justLost = true;
+            return 1;
+        }
+        else {
+            return (bet * 2);
         }
     }
-}
-
-
-float randmm(float min, float max){
-     static int first = -1;
-     if((first = (first<0))){
-         srand(time(NULL)+getpid());
-     }
-     if(min>=max){
-         return errno=EDOM, NAN;
-     }
-     return min + (float)rand() / ((float)RAND_MAX / (max - min));
 }
